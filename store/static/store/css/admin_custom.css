@@ -1,0 +1,47 @@
+/* Tech House Admin - Modern Skin (High Priority) */
+
+/* Force Dark Mode compatibility */
+:root, [data-theme="light"], [data-theme="dark"] {
+    --primary: #0d6efd !important;
+    --accent: #58a6ff !important;
+}
+
+/* Header & Sidebar */
+#header {
+    background: #0d1117 !important;
+    color: #58a6ff !important;
+    border-bottom: 2px solid #30363d !important;
+}
+
+div.breadcrumbs {
+    background: #161b22 !important;
+    color: #8b949e !important;
+}
+
+/* Sidebar Styling */
+#nav-sidebar, .main > .dashboard-sidebar {
+    background: #0d1117 !important;
+    border-right: 1px solid #30363d !important;
+}
+
+/* Table Headers */
+.module table thead th {
+    background: #212529 !important;
+    color: #ffffff !important;
+}
+
+/* Modern Blue Buttons */
+.button, input[type=submit], .submit-row input, .addlink {
+    background-color: #0d6efd !important;
+    background-image: none !important;
+    border-radius: 6px !important;
+    padding: 8px 16px !important;
+    border: none !important;
+    color: white !important;
+}
+
+/* Recent Actions list */
+.module h2, .module caption {
+    background: #212529 !important;
+    color: #58a6ff !important;
+}

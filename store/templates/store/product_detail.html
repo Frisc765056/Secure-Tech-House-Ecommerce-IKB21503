@@ -1,0 +1,85 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="row">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'product_list' %}">Shop</a></li>
+            <li class="breadcrumb-item active">{{ product.category }}</li>
+        </ol>
+    </nav>
+
+    <div class="col-md-6 mb-4">
+        <div class="card border-0 shadow-sm p-5 text-center bg-white h-100 d-flex flex-column justify-content-center">
+            <h1 class="display-1 text-primary">
+                {% if "RAM" in product.category|upper or "RAM" in product.name|upper %}
+                    <i class="bi bi-memory"></i>
+                {% elif "GPU" in product.category|upper or "GPU" in product.name|upper or "GRAPHICS" in product.name|upper %}
+                    <i class="bi bi-gpu-card"></i>
+                {% elif "CPU" in product.category|upper or "CPU" in product.name|upper or "PROCESSOR" in product.name|upper %}
+                    <i class="bi bi-cpu"></i>
+                {% elif "STORAGE" in product.category|upper or "HDD" in product.name|upper or "SSD" in product.name|upper or "DRIVE" in product.name|upper %}
+                    <i class="bi bi-hdd-fill"></i>
+                {% else %}
+                    <i class="bi bi-pc-display"></i>
+                {% endif %}
+            </h1>
+            <div class="py-4 bg-light rounded mt-3">
+                <h2 class="text-uppercase text-secondary mb-0 fw-bold">{{ product.category }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="ps-lg-4">
+            <span class="badge bg-primary mb-2">Authenticated Hardware</span>
+            <h1 class="fw-bold mb-1">{{ product.name }}</h1>
+            
+            <div class="mb-3">
+                {% if product.stock > 0 %}
+                    <span class="badge bg-success small">In Stock ({{ product.stock }})</span>
+                {% else %}
+                    <span class="badge bg-danger small">Out of Stock</span>
+                {% endif %}
+            </div>
+
+            <h2 class="text-primary mb-4">${{ product.price }}</h2>
+            
+            <p class="lead text-muted mb-4">{{ product.description }}</p>
+
+            <div class="d-grid gap-2 mb-4">
+                {% if user.is_authenticated %}
+                    {% if product.stock > 0 %}
+                        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-dark btn-lg">
+                            <i class="bi bi-cart-plus me-2"></i>Add to Secure Cart
+                        </a>
+                    {% else %}
+                        <button class="btn btn-secondary btn-lg disabled" type="button">Out of Stock</button>
+                    {% endif %}
+                {% else %}
+                    <div class="alert alert-info border-0 shadow-sm">
+                        <i class="bi bi-info-circle me-2"></i> 
+                        Please <a href="{% url 'login' %}" class="alert-link">Login</a> or 
+                        <a href="{% url 'register' %}" class="alert-link">Sign Up</a> to purchase this hardware.
+                    </div>
+                    <button class="btn btn-secondary btn-lg disabled" type="button">Add to Secure Cart</button>
+                {% endif %}
+            </div>
+
+            <hr>
+
+            <div class="card bg-light border-0">
+                <div class="card-body">
+                    <h6 class="fw-bold text-success"><i class="bi bi-shield-check"></i> Security & Integrity Audit</h6>
+                    <ul class="small text-muted mb-0">
+                        <li><strong>Serial ID:</strong> TH-{{ product.id|add:"1000" }}</li>
+                        <li><strong>Status:</strong> Verified Genuine Hardware</li>
+                        <li><strong>Last Audit:</strong> January 2026</li>
+                        <li><strong>Firmware:</strong> Signed & Encrypted</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

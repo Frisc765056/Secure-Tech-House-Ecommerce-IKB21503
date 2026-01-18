@@ -1,0 +1,98 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <h2 class="fw-bold">Available Hardware</h2>
+        <p class="text-muted">Select a component to view detailed technical specifications and security audits.</p>
+        <hr>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-8 offset-md-2">
+        <form method="GET" class="d-flex gap-2 shadow-sm p-3 bg-white rounded border">
+            <input type="text" name="query" class="form-control form-control-lg border-0" 
+                   placeholder="Search for hardware (e.g. RAM, GPU)..." 
+                   value="{{ request.GET.query }}">
+            <button class="btn btn-primary px-4 fw-bold" type="submit">
+                <i class="bi bi-search"></i> Search
+            </button>
+        </form>
+        
+        {% if search_form.errors %}
+            <div class="alert alert-danger mt-3 shadow-sm border-danger">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-shield-x-fill fs-4 me-2"></i>
+                    <div>
+                        <strong>Security Alert:</strong>
+                        {% for field in search_form %}
+                            {% for error in field.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in search_form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for product in products %}
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <div class="text-center py-3 mb-3 bg-light rounded">
+                    <div class="display-4 text-primary">
+                        {% if "RAM" in product.category|upper or "RAM" in product.name|upper %}
+                            <i class="bi bi-memory"></i>
+                        {% elif "GPU" in product.category|upper or "GPU" in product.name|upper or "GRAPHICS" in product.name|upper %}
+                            <i class="bi bi-gpu-card"></i>
+                        {% elif "CPU" in product.category|upper or "CPU" in product.name|upper or "PROCESSOR" in product.name|upper %}
+                            <i class="bi bi-cpu"></i>
+                        {% elif "STORAGE" in product.category|upper or "HDD" in product.name|upper or "SSD" in product.name|upper or "DRIVE" in product.name|upper %}
+                            <i class="bi bi-hdd-fill"></i>
+                        {% else %}
+                            <i class="bi bi-pc-display"></i>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <h6 class="text-primary text-uppercase small fw-bold">{{ product.category }}</h6>
+                
+                <h4 class="card-title fw-bold">
+                    <a href="{% url 'product_detail' product.pk %}" class="text-decoration-none text-dark">
+                        {{ product.name }}
+                    </a>
+                </h4>
+                
+                <p class="card-text text-muted">{{ product.description|truncatechars:80 }}</p>
+                
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <span class="h4 mb-0 fw-bold">${{ product.price }}</span>
+                    
+                    <div class="btn-group">
+                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-outline-secondary btn-sm">Specs</a>
+                        
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary btn-sm">Add to Cart</a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm">Login to Buy</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <div class="alert alert-warning shadow-sm">
+            <strong>No hardware found.</strong> Try adjusting your search query.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

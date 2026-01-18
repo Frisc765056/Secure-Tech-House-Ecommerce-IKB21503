@@ -1,0 +1,78 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="col-md-5">
+        <div class="card shadow-lg border-0">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-lock text-primary" style="font-size: 3rem;"></i>
+                    <h2 class="fw-bold">Login</h2>
+                </div>
+
+                {% if request.GET.next %}
+                    <div class="alert alert-warning border-0 shadow-sm mb-4">
+                        <i class="bi bi-clock-history me-2"></i>
+                        Your session may have expired. Please log in again to continue.
+                    </div>
+                {% endif %}
+
+                {% if error_locked %}
+                    <div class="alert alert-danger border-0 shadow-sm mb-4">
+                        <strong><i class="bi bi-shield-slash-fill"></i> {{ error_locked }}</strong>
+                    </div>
+                {% endif %}
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-warning border-0 shadow-sm mb-3">
+                            <i class="bi bi-exclamation-triangle-fill"></i> {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger p-2 small text-center mb-3">
+                        {% for error in form.non_field_errors %}
+                            <i class="bi bi-x-circle"></i> {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if not is_locked %}
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold">Login</button>
+                    </div>
+                </form>
+                {% else %}
+                    <div class="text-center py-4 bg-light rounded">
+                        <p class="text-danger fw-bold mb-0">Login is currently disabled.</p>
+                        <p class="small text-muted">Restart your browser to reset the session.</p>
+                    </div>
+                {% endif %}
+
+                <hr class="my-4">
+                <div class="text-center">
+                    <a href="{% url 'register' %}" class="text-decoration-none fw-bold">Create a Tech House account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Force Bootstrap styling on Django fields */
+    input[type="text"], input[type="password"] {
+        display: block; width: 100%; padding: 0.6rem; 
+        border: 1px solid #ced4da; border-radius: 0.375rem;
+    }
+</style>
+{% endblock %}
